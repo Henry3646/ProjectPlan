@@ -1,7 +1,10 @@
 import { View, Text } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useApp } from '~/context/AppContext';
 
 const index = () => {
+  const { projects } = useApp();
+  
   return (
     <View>
       <Text>index</Text>

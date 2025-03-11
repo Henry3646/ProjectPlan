@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Storage, AppSettings, Project } from '../lib/storage';
+import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 
 type AppContextType = {
@@ -38,8 +39,10 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       id: uuidv4(),
       createdAt: new Date(),
     };
+    console.log('newProject', newProject)
     
     const updatedProjects = [...projects, newProject];
+    console.log('updatedProjects', updatedProjects)
     setProjects(updatedProjects);
     await Storage.saveProjects(updatedProjects);
   };
