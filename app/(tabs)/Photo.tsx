@@ -1,13 +1,11 @@
-import { View, TextInput, ScrollView, StyleSheet, Image, Alert, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, ScrollView, StyleSheet, Image, Alert, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, Platform } from 'react-native';
 import React, { useState, useRef, useEffect } from 'react';
 import { Text } from '../../components/ui/text';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../components/ui/card';
 import { useApp } from '../../context/AppContext';
 import { Camera, CameraType, CameraView } from 'expo-camera';
-import * as FileSystem from 'expo-file-system';
 import { Step } from '../../types/project';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Input } from '../../components/ui/input';
 import { Label } from '~/components/ui/label';
 import { SwitchCamera, Circle, X } from 'lucide-react-native'
