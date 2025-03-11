@@ -10,6 +10,7 @@ import { Input } from '../../components/ui/input';
 import { Label } from '~/components/ui/label';
 import { SwitchCamera, Circle, X } from 'lucide-react-native'
 import { Badge } from '~/components/ui/badge';
+import { router } from 'expo-router';
 type ProjectState = 'init' | 'capturing' | 'review' | 'description' | 'complete';
 
 const Photo = () => {
@@ -88,13 +89,20 @@ const Photo = () => {
       };
 
       await addProject(project);
-      Alert.alert('Success', 'Project saved successfully!');
-      setProjectState('init');
-      setProjectName('');
-      setProjectDescription('');
-      setSteps([]);
-      setCurrentPhoto(null);
-      setCurrentDescription('');
+      Alert.alert('Success', 'Project saved successfully!', [
+        {
+          text: 'OK',
+          onPress: () => {
+            setProjectState('init');
+            setProjectName('');
+            setProjectDescription('');
+            setSteps([]);
+            setCurrentPhoto(null);
+            setCurrentDescription('');
+            router.replace('/(tabs)');
+          },
+        },
+      ]);
     } catch (error) {
       console.error('Error saving project:', error);
       Alert.alert('Error', 'Failed to save project. Please try again.');
