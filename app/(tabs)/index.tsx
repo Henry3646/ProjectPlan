@@ -1,7 +1,8 @@
-import { SafeAreaView, View } from 'react-native'
-import React, { useEffect } from 'react'
-import { useApp } from '~/context/AppContext';
-import { Text } from '~/components/ui/text';
+import { SafeAreaView, View } from "react-native";
+import React, { useEffect } from "react";
+import { useApp } from "~/context/AppContext";
+import { Text } from "~/components/ui/text";
+import { H2 } from "~/components/ui/typography";
 
 // interface Project {
 //   id: string;
@@ -24,9 +25,10 @@ const index = () => {
 
   return (
     <SafeAreaView>
+      <H2>Projects</H2>
       <Text>index</Text>
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default index
+export default index;
