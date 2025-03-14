@@ -39,3 +39,9 @@ yarn-error.*
 
 expo-env.d.ts
 # @end expo-cli
+lib/icons/Check.tsx
+lib/icons/ChevronDown.tsx
+lib/icons/ChevronRight.tsx
+lib/icons/ChevronUp.tsx
+lib/icons/Check.tsx
+lib/icons/ChevronDown.tsx
