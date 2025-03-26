@@ -8,6 +8,8 @@ type AppContextType = {
   settings: AppSettings;
   addProject: (project: Omit<Project, 'id' | 'createdAt'>) => Promise<void>;
   deleteProject: (projectId: string) => void;
+  editProjectName: (projectId: string, newName: string) => Promise<void>;
+  updateProjectSteps: (projectId: string, updatedSteps: Step[]) => void;
   //increaseProjectLimit: (amount: number) => Promise<void>;
   //unlockFeature: (feature: string) => Promise<void>;
 };
@@ -58,6 +60,24 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 //     setSettings(newSettings);
 //     await Storage.saveSettings(newSettings);
 //   };
+  const editProjectName = (projectId: string, newName: string) => {
+    const updatedProjects = projects.map((project) =>
+      project.id === projectId ? { ...project, name: newName } : project
+    );
+    console.log(`Project renamed: ${projectId} → ${newName}`);
+    console.log("Updated projects", updatedProjects);
+    setProjects(updatedProjects);
+    Storage.saveProjects(updatedProjects);
+  };
+  const updateProjectSteps = (projectId: string, updatedSteps: Step[]) => {
+    setProjects((prevProjects) =>
+      prevProjects.map((project) =>
+        project.id === projectId
+          ? { ...project, steps: updatedSteps }
+          : project
+      )
+    );
+  };
 
 //   const unlockFeature = async (feature: string) => { 
 //     const newFeatures = [...(settings.purchasedFeatures || []), feature];
@@ -73,6 +93,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         settings,
         addProject,
         deleteProject,
+        editProjectName,
+        updateProjectSteps,
         //increaseProjectLimit,
         //unlockFeature,
       }}>
