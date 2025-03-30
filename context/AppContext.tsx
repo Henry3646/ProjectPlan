@@ -17,7 +17,7 @@ type AppContextType = {
 const AppContext = createContext<AppContextType>({} as AppContextType);
 
 import { ReactNode } from 'react';
-import { PurchaseType } from '~/types/project';
+import { PurchaseType, Step } from '~/types/project';
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -49,10 +49,10 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     await Storage.saveProjects(updatedProjects);
   };
 
-  const deleteProject = (projectId: string) => {
+  const deleteProject = async (projectId: string) => {
     const updatedProjects = projects.filter(p => p.id !== projectId);
     setProjects(updatedProjects);
-    Storage.saveProjects(updatedProjects);
+    await Storage.saveProjects(updatedProjects);
   };
 
 //   const increaseProjectLimit = async (amount: number) => {
@@ -60,14 +60,14 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 //     setSettings(newSettings);
 //     await Storage.saveSettings(newSettings);
 //   };
-  const editProjectName = (projectId: string, newName: string) => {
+  const editProjectName = async (projectId: string, newName: string) => {
     const updatedProjects = projects.map((project) =>
       project.id === projectId ? { ...project, name: newName } : project
     );
     console.log(`Project renamed: ${projectId} → ${newName}`);
     console.log("Updated projects", updatedProjects);
     setProjects(updatedProjects);
-    Storage.saveProjects(updatedProjects);
+    await Storage.saveProjects(updatedProjects);
   };
   const updateProjectSteps = (projectId: string, updatedSteps: Step[]) => {
     setProjects((prevProjects) =>

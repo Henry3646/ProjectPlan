@@ -29,6 +29,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
+import { Project } from "~/types/project";
 
 
 
@@ -61,7 +62,7 @@ const index = () => {
   // Fix drop down menu location
   // Maybe take away const NewProject because i dont like it!!!
   // change dropdown menu
-  const handleRenameProject = (project) => {
+  const handleRenameProject = (project: Project) => {
     Alert.prompt(
       "Rename Project",
       "Enter a new project name:",
@@ -69,9 +70,10 @@ const index = () => {
         { text: "Cancel", style: "cancel" },
         { 
           text: "Save", 
-          onPress: (newName) => {
-            if (newName.trim().length > 0) {
-              editProjectName(project.id, newName);
+          onPress: (newName?: string) => {
+            const trimmedName = newName?.trim();
+            if (trimmedName && trimmedName.length > 0) {
+              editProjectName(project.id, trimmedName);
             }
           } 
         }
