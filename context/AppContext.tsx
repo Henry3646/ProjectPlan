@@ -54,14 +54,14 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     Storage.saveProjects(updatedProjects);
   };
 
-  const editProjectName = (projectId: string, newName: string) => {
+  const editProjectName = async (projectId: string, newName: string) => {
     const updatedProjects = projects.map((project) =>
       project.id === projectId ? { ...project, name: newName } : project
     );
     console.log(`Project renamed: ${projectId} → ${newName}`);
     console.log("Updated projects", updatedProjects);
     setProjects(updatedProjects);
-    Storage.saveProjects(updatedProjects);
+    await Storage.saveProjects(updatedProjects);
   };
 
   //   const increaseProjectLimit = async (amount: number) => {
