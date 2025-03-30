@@ -29,9 +29,6 @@ import {
 } from '~/components/ui/dropdown-menu';
 import { Project } from "~/types/project";
 
-
-
-
 // interface Project {
 //   id: string;
 //   name: string;
@@ -50,6 +47,7 @@ import { Project } from "~/types/project";
 
 const index = () => {
   const { projects, settings, deleteProject, addProject, editProjectName } = useApp();
+
   const { isDarkColorScheme } = useColorScheme();
   const theme = isDarkColorScheme ? NAV_THEME.dark : NAV_THEME.light;
   // Add images
@@ -101,6 +99,7 @@ const index = () => {
         >
           <Text className="text-4xl font-light text-[#464646]">+</Text>
         </TouchableOpacity>
+
         </View>
       ) : (
         <View className="flex-row flex-wrap px-10 justify-between gap-4">
@@ -134,6 +133,7 @@ const index = () => {
                   </DropdownMenuGroup>
                 </DropdownMenuContent>
               </DropdownMenu>
+
             </TouchableOpacity>
           ))}
         </View>
