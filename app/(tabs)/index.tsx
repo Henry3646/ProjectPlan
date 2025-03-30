@@ -15,6 +15,7 @@ import { NAV_THEME } from "~/lib/constants";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { ImageBackground } from 'react-native';
 import { router } from 'expo-router';
+
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import {
   DropdownMenu,
@@ -30,9 +31,6 @@ import {
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
 import { Project } from "~/types/project";
-
-
-
 
 // interface Project {
 //   id: string;
@@ -62,6 +60,7 @@ const index = () => {
   // Fix drop down menu location
   // Maybe take away const NewProject because i dont like it!!!
   // change dropdown menu
+
   const handleRenameProject = (project: Project) => {
     Alert.prompt(
       "Rename Project",

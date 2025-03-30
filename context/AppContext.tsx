@@ -1,15 +1,16 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { Storage, AppSettings, Project } from '../lib/storage';
-import 'react-native-get-random-values';
-import { v4 as uuidv4 } from 'uuid';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { Storage, AppSettings, Project } from "../lib/storage";
+import "react-native-get-random-values";
+import { v4 as uuidv4 } from "uuid";
 
 type AppContextType = {
   projects: Project[];
   settings: AppSettings;
-  addProject: (project: Omit<Project, 'id' | 'createdAt'>) => Promise<void>;
+  addProject: (project: Omit<Project, "id" | "createdAt">) => Promise<void>;
   deleteProject: (projectId: string) => void;
   editProjectName: (projectId: string, newName: string) => Promise<void>;
   updateProjectSteps: (projectId: string, updatedSteps: Step[]) => void;
+
   //increaseProjectLimit: (amount: number) => Promise<void>;
   //unlockFeature: (feature: string) => Promise<void>;
 };
@@ -35,22 +36,23 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     loadData();
   }, []);
 
-  const addProject = async (project: Omit<Project, 'id' | 'createdAt'>) => {
+  const addProject = async (project: Omit<Project, "id" | "createdAt">) => {
     const newProject: Project = {
       ...project,
       id: uuidv4(),
       createdAt: new Date(),
     };
-    console.log('newProject', newProject)
-    
+    console.log("newProject", newProject);
+
     const updatedProjects = [...projects, newProject];
-    console.log('updatedProjects', updatedProjects)
+    console.log("updatedProjects", updatedProjects);
     setProjects(updatedProjects);
     await Storage.saveProjects(updatedProjects);
   };
 
   const deleteProject = async (projectId: string) => {
     const updatedProjects = projects.filter(p => p.id !== projectId);
+
     setProjects(updatedProjects);
     await Storage.saveProjects(updatedProjects);
   };
@@ -60,6 +62,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 //     setSettings(newSettings);
 //     await Storage.saveSettings(newSettings);
 //   };
+
   const editProjectName = async (projectId: string, newName: string) => {
     const updatedProjects = projects.map((project) =>
       project.id === projectId ? { ...project, name: newName } : project
@@ -79,12 +82,13 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
-//   const unlockFeature = async (feature: string) => { 
-//     const newFeatures = [...(settings.purchasedFeatures || []), feature];
-//     const newSettings = { ...settings, purchasedFeatures: newFeatures };
-//     setSettings(newSettings);
-//     await Storage.saveSettings(newSettings);
-//   };
+
+  //   const unlockFeature = async (feature: string) => {
+  //     const newFeatures = [...(settings.purchasedFeatures || []), feature];
+  //     const newSettings = { ...settings, purchasedFeatures: newFeatures };
+  //     setSettings(newSettings);
+  //     await Storage.saveSettings(newSettings);
+  //   };
 
   return (
     <AppContext.Provider
@@ -97,7 +101,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         updateProjectSteps,
         //increaseProjectLimit,
         //unlockFeature,
-      }}>
+      }}
+    >
       {children}
     </AppContext.Provider>
   );
