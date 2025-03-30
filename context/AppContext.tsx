@@ -9,14 +9,16 @@ type AppContextType = {
   addProject: (project: Omit<Project, "id" | "createdAt">) => Promise<void>;
   deleteProject: (projectId: string) => void;
   editProjectName: (projectId: string, newName: string) => Promise<void>;
+  updateProjectSteps: (projectId: string, updatedSteps: Step[]) => void;
+
   //increaseProjectLimit: (amount: number) => Promise<void>;
   //unlockFeature: (feature: string) => Promise<void>;
 };
 
 const AppContext = createContext<AppContextType>({} as AppContextType);
 
-import { ReactNode } from "react";
-import { PurchaseType } from "~/types/project";
+import { ReactNode } from 'react';
+import { PurchaseType, Step } from '~/types/project';
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -48,11 +50,18 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     await Storage.saveProjects(updatedProjects);
   };
 
-  const deleteProject = (projectId: string) => {
-    const updatedProjects = projects.filter((p) => p.id !== projectId);
+  const deleteProject = async (projectId: string) => {
+    const updatedProjects = projects.filter(p => p.id !== projectId);
+
     setProjects(updatedProjects);
-    Storage.saveProjects(updatedProjects);
+    await Storage.saveProjects(updatedProjects);
   };
+
+//   const increaseProjectLimit = async (amount: number) => {
+//     const newSettings = { ...settings, projectLimit: settings.projectLimit + amount };
+//     setSettings(newSettings);
+//     await Storage.saveSettings(newSettings);
+//   };
 
   const editProjectName = async (projectId: string, newName: string) => {
     const updatedProjects = projects.map((project) =>
@@ -63,12 +72,16 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     setProjects(updatedProjects);
     await Storage.saveProjects(updatedProjects);
   };
+  const updateProjectSteps = (projectId: string, updatedSteps: Step[]) => {
+    setProjects((prevProjects) =>
+      prevProjects.map((project) =>
+        project.id === projectId
+          ? { ...project, steps: updatedSteps }
+          : project
+      )
+    );
+  };
 
-  //   const increaseProjectLimit = async (amount: number) => {
-  //     const newSettings = { ...settings, projectLimit: settings.projectLimit + amount };
-  //     setSettings(newSettings);
-  //     await Storage.saveSettings(newSettings);
-  //   };
 
   //   const unlockFeature = async (feature: string) => {
   //     const newFeatures = [...(settings.purchasedFeatures || []), feature];
@@ -85,6 +98,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         addProject,
         deleteProject,
         editProjectName,
+        updateProjectSteps,
         //increaseProjectLimit,
         //unlockFeature,
       }}

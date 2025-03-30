@@ -13,6 +13,9 @@ import { H2, Small } from "~/components/ui/typography";
 import { useColorScheme } from "~/lib/useColorScheme";
 import { NAV_THEME } from "~/lib/constants";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { ImageBackground } from 'react-native';
+import { router } from 'expo-router';
+
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import {
   DropdownMenu,
@@ -47,16 +50,17 @@ import { Project } from "~/types/project";
 
 const index = () => {
   const { projects, settings, deleteProject, addProject, editProjectName } = useApp();
-
   const { isDarkColorScheme } = useColorScheme();
   const theme = isDarkColorScheme ? NAV_THEME.dark : NAV_THEME.light;
-  // Add images
+  const firstImageUri = projects?.[0]?.steps?.[0]?.imageUri;
+
   // Add character Limit for title and font size change for character amount
-  // integrate "addProject" function
   // Use Alert from rnr but will have to use pressable
   // Make alert to make sure they want to delete the project
   // Fix drop down menu location
-  // Maybe take away const NewProject because i dont like it
+  // Maybe take away const NewProject because i dont like it!!!
+  // change dropdown menu
+
   const handleRenameProject = (project: Project) => {
     Alert.prompt(
       "Rename Project",
@@ -99,42 +103,50 @@ const index = () => {
         >
           <Text className="text-4xl font-light text-[#464646]">+</Text>
         </TouchableOpacity>
-
         </View>
       ) : (
         <View className="flex-row flex-wrap px-10 justify-between gap-4">
           {projects.map((project) => (
             <TouchableOpacity
-              activeOpacity={0.5}
-              key={project.id}
-              className="w-[45%] h-[170px] bg-[#464646] p-4 rounded-lg"
-              onPress={() => console.log("Opening Current Project")} //TODO
+            key={project.id}
+            onPress={() => router.push(`/projects/${project.id}`)}
+            className="w-[45%] h-[170px] rounded-lg overflow-hidden"
+            activeOpacity={0.8}
             >
-              <Text className="text-2xl font-bold text-white">
-                {project.name}</Text>
+            <ImageBackground
+              source={{ uri: project.steps[0]?.imageUri }}
+              className="flex-1 justify-start p-3"
+              imageStyle={{ borderRadius: 12 }}
+            >
+              <View className="bg-black/50 px-2 py-1 rounded">
+                <Text className="text-white font-bold text-lg">{project.name}</Text>
+              </View>
+              <View className="absolute top-2 right-2 z-20">
                 <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <TouchableOpacity className=" absolute align=end top-1 right-2">
-                    <Icon name="more-vert" size={24} color="white" />
-                  </TouchableOpacity>
-                </DropdownMenuTrigger>
-
-                <DropdownMenuContent className="w-40">
-                  <DropdownMenuGroup>
-                    <DropdownMenuItem onPress={() => {handleRenameProject(project)}}>
-                    <MaterialCommunityIcons name="pencil" size={20} color="black" />
-                      <Text>Edit</Text>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onPress={() => {deleteProject(project.id)}}>
-                    <MaterialCommunityIcons name="trash-can" size={20} color="red" />
-                      <Text>Delete</Text>
-                    </DropdownMenuItem>
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-            </TouchableOpacity>
+                  <DropdownMenuTrigger asChild>
+                    <TouchableOpacity>
+                      <Icon name="more-vert" size={24} color="white" />
+                    </TouchableOpacity>
+                  </DropdownMenuTrigger>
+          
+                  <DropdownMenuContent className="w-40">
+                    <DropdownMenuGroup>
+                      <DropdownMenuItem onPress={() => handleRenameProject(project)}>
+                        <MaterialCommunityIcons name="pencil" size={20} color={isDarkColorScheme ? 'white' : 'black'} />
+                        <Text>Edit</Text>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onPress={() => deleteProject(project.id)}>
+                        <MaterialCommunityIcons name="trash-can" size={20} color="red" />
+                        <Text>Delete</Text>
+                      </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </View>
+            </ImageBackground>
+          </TouchableOpacity>
+          
           ))}
         </View>
       )}
