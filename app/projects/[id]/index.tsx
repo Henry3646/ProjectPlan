@@ -6,15 +6,19 @@ import {
   Text,
   TouchableOpacity,
   Alert,
+  TextInput,
+  Animated,
   useColorScheme,
 } from "react-native";
 import { useLocalSearchParams, useNavigation, router } from "expo-router";
 import { useApp } from "~/context/AppContext";
 import { useLayoutEffect, useRef, useState } from "react";
-import { Camera, ArrowLeft, Trash2, RotateCcw } from "lucide-react-native";
+import { Cctv, ArrowLeft, Trash2, RotateCcw } from "lucide-react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Badge } from "~/components/ui/badge";
 import { Step } from "~/types/project";
+import { Camera, CameraType, CameraView } from 'expo-camera';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
 const [currentDescription, setCurrentDescription] = useState("");
@@ -28,14 +32,29 @@ const StepScreen = ({
   index: number;
   total: number;
 }) => {
+  const [comment, setComment] = useState(item.comment);
+  const { updateProjectSteps, projects } = useApp();
+
+  const handleSave = () => {
+    const project = projects.find((p) =>
+      p.steps.some((s) => s.id === item.id)
+    );
+    if (!project) return;
+
+    const updatedSteps = project.steps.map((s) =>
+      s.id === item.id ? { ...s, comment } : s
+    );
+    updateProjectSteps(project.id, updatedSteps);
+  };
+
   return (
     <View
       style={{
         height: screenHeight,
         width: screenWidth,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "black",
+        backgroundColor: 'black',
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
     >
       <Image
@@ -43,7 +62,6 @@ const StepScreen = ({
         style={{ width: screenWidth, height: screenHeight }}
         resizeMode="contain"
       />
-
       <View className="flex-row gap-2 absolute top-0 left-1/2 -translate-x-1/2 mt-[52px]">
         <Badge>
           <Text className="text-lg px-2">Step</Text>
@@ -53,13 +71,35 @@ const StepScreen = ({
         </Badge>
       </View>
 
-      {item.comment ? (
-        <View className="absolute bottom-10 px-4 w-full">
-          <Text className="text-white text-base text-center">
-            {item.comment}
-          </Text>
-        </View>
-      ) : null}
+      {/* Faded Description Input */}
+      <LinearGradient
+        colors={['rgba(0,0,0,1)', 'rgba(0,0,0,0)']}
+        start={{ x: 0.5, y: 1 }}
+        end={{ x: 0.5, y: 0 }}
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: 500,
+          justifyContent: 'flex-end',
+          paddingHorizontal: 16,
+          paddingBottom: 156,
+        }}
+      >
+        <TextInput
+          value={comment}
+          onChangeText={setComment}
+          onBlur={handleSave}
+          placeholder="Add a description…."
+          placeholderTextColor="rgba(255,255,255,0.5)"
+          style={{
+            color: 'white',
+            fontSize: 16,
+            paddingVertical: 8,
+          }}
+  />
+</LinearGradient>
     </View>
   );
 };
@@ -74,6 +114,7 @@ export default function ProjectFullscreenGallery() {
   const iconColor = colorScheme === "dark" ? "white" : "black";
   const project = projects.find((p) => p.id === id);
   const steps = project?.steps || [];
+  
 
   const handleAddImage = async () => {
     const result = await ImagePicker.launchCameraAsync({
@@ -162,7 +203,7 @@ export default function ProjectFullscreenGallery() {
               <RotateCcw size={24} color="white" />
             </TouchableOpacity>
             <TouchableOpacity onPress={handleAddImage}>
-              <Camera size={24} color="white" />
+              <Cctv size={24} color="white" />
             </TouchableOpacity>
           </View>
         ),
