@@ -13,12 +13,13 @@ import {
 import { useLocalSearchParams, useNavigation, router } from "expo-router";
 import { useApp } from "~/context/AppContext";
 import { useLayoutEffect, useRef, useState } from "react";
-import { Cctv, ArrowLeft, Trash2, RotateCcw } from "lucide-react-native";
+import { ImagePlus, ArrowLeft, Trash2, RotateCcw, Repeat2 } from "lucide-react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Badge } from "~/components/ui/badge";
 import { Step } from "~/types/project";
 import { Camera, CameraType, CameraView } from 'expo-camera';
 import { LinearGradient } from 'expo-linear-gradient';
+import { motion } from "motion/react"
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
 const [currentDescription, setCurrentDescription] = useState("");
@@ -71,7 +72,6 @@ const StepScreen = ({
         </Badge>
       </View>
 
-      {/* Faded Description Input */}
       <LinearGradient
         colors={['rgba(0,0,0,1)', 'rgba(0,0,0,0)']}
         start={{ x: 0.5, y: 1 }}
@@ -140,6 +140,15 @@ export default function ProjectFullscreenGallery() {
     }
   };
 
+  const handleReverseOrder = () => {
+    if ((!project) || (project.steps.length === 0)) {
+      return;
+    }
+    const reversedOrder = [...project.steps].reverse();
+    updateProjectSteps(project.id, reversedOrder);
+    setCurrentIndex(0);
+  };
+
   const handleRetakeImage = async () => {
     if (!project) return;
 
@@ -187,12 +196,16 @@ export default function ProjectFullscreenGallery() {
         title: "",
         headerTransparent: true,
         headerLeft: () => (
-          <TouchableOpacity
-            onPress={() => router.replace("/(tabs)")}
-            style={{ paddingHorizontal: 16 }}
-          >
-            <ArrowLeft size={24} color="white" />
-          </TouchableOpacity>
+          <View className="flex-row items-center pr-2">
+            <TouchableOpacity
+              onPress={() => navigation.goBack("/(tabs)")}
+              style={{ paddingHorizontal: 16 }}> 
+              <ArrowLeft size={24} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleReverseOrder}>
+              <Repeat2 size={24} color="white"/>
+            </TouchableOpacity>
+          </View>
         ),
         headerRight: () => (
           <View className="flex-row items-center gap-4 pr-4">
@@ -203,7 +216,7 @@ export default function ProjectFullscreenGallery() {
               <RotateCcw size={24} color="white" />
             </TouchableOpacity>
             <TouchableOpacity onPress={handleAddImage}>
-              <Cctv size={24} color="white" />
+              <ImagePlus size={24} color="white" />
             </TouchableOpacity>
           </View>
         ),

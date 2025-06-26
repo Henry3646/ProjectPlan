@@ -15,6 +15,7 @@ import { NAV_THEME } from "~/lib/constants";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { ImageBackground } from 'react-native';
 import { router } from 'expo-router';
+import LoadingScreen from '~/components/LoadingScreen'
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import {
@@ -54,12 +55,21 @@ const index = () => {
   const theme = isDarkColorScheme ? NAV_THEME.dark : NAV_THEME.light;
   const firstImageUri = projects?.[0]?.steps?.[0]?.imageUri;
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   // Add character Limit for title and font size change for character amount
   // Use Alert from rnr but will have to use pressable
   // change dropdown menu
   // add zoom in
   // Fix the camera for projects/[id]- use project UI not imagepicker
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setLoading(false);
+    }, 5000); // 5 second
+
+    return () => clearTimeout(timeout);
+  }, []);
 
   const handleRenameProject = (project: Project) => {
     Alert.prompt(
